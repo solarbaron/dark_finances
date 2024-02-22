@@ -317,7 +317,7 @@ function pujcka() {
     fi
     echo "Kolik peněz si chcete půjčit?"
     read pujcka_money_volba
-    if [[ $pujcka_money_volba -gt $((3*(money+bank))) ]] || [ $pocet_pujcek -ge 1 ] || ; then
+    if [[ $pujcka_money_volba -gt $((3*(money+bank))) ]] || [[ $pocet_pujcek -ge 1 ]] || [[ $pujcka_money_volba -le 0 ]]; then
     echo "Omlouváme se vám $name ale nesplnujete pozadavky pro pujcku"
     banka
     
