@@ -17,6 +17,7 @@ function installer() {
         sudo pacman -S wget
         ;;
         2 | apt | APT)
+        apt update
         sudo apt install wget
         ;;
         3 | dnf | DNF)
