@@ -39,15 +39,21 @@ case $updater_v1 in
 3)
  echo "opravdu chcete hru odstranit z tohoto zařízeni?"
  read uninstall_v1
- if [ uninstall_v1 == ano ]; then
-    sudo rm -rf /bin/dfinances
-    sudo rm -rf /bin/dfinances-updater
+ case $uninstall_v1 in
+ ano)
     sudo rm -rf /usr/bin/dfinances
     sudo rm -rf /usr/bin/dfinances-updater
     rm -rf $HOME/.ds_data/
     echo "software byl úspěšně odstraněn z vašeho zařízení, litujeme že jsem se takto rozhodli."
- fi
- exit
+    exit
+ ;;
+ ne)
+ updater
+ ;;
+ *)
+ echo "neplatná odpověď"
+ updater
+ esac
 ;;
 4)
     exit
