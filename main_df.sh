@@ -46,8 +46,7 @@ function save() {
   if [ "$save_1" == "ano" ]; then
     echo "jak chcete save file pojmenovat"
     read save_name
-    mkdir -p $HOME/.ds_data/
-    touch "$HOME/.ds_data/$save_name"
+    touch "$HOME/.ds_data/save/$save_name"
     {
       echo "export pocet_pujcek=$pocet_pujcek"
       echo "export trezor_bal=$trezor_bal"
@@ -60,7 +59,7 @@ function save() {
       echo "export character=$character"
       echo "export nickname=$nickname"
       echo "export heslo=$heslo"
-    } > "$HOME/.ds_data/$save_name"
+    } > "$HOME/.ds_data/save/$save_name"
  else
     echo "konec"
   fi
@@ -208,11 +207,11 @@ echo "chcete nacist save (ano/ne)"
 read load_1
 case $load_1 in
 ano)
-ls $HOME/.ds_data/
+ls $HOME/.ds_data/save/
 echo "vyberte save file"
 read s_load_name
-if [ -f "$HOME/.ds_data/$s_load_name" ]; then
-source $HOME/.ds_data/$s_load_name
+if [ -f "$HOME/.ds_data/save/$s_load_name" ]; then
+source $HOME/.ds_data/save/$s_load_name
 #echo $health #debug
 else
 echo "tento save file neexistuje"
