@@ -2,7 +2,7 @@
 #darksouls 4
 
 #vsechny funkce
-function game() {
+#function game() {
 trap 'cleanup' SIGTERM SIGINT #EXIT 
 pocet_pujcek=0
 trezor_bal=0
@@ -20,27 +20,22 @@ nickname=none
 
 current_location=Prague_predmesti
 
-touch timer.sh
-chmod 777 timer.sh
-echo '#!/bin/bash
-touch timer.txt
-echo "600" > timer.txt
-time_seconds=600
-
-while [ $time_seconds -gt 0 ]; do
-  echo "$time_seconds" > timer.txt
-  sleep 1
-  time_seconds=$((time_seconds - 1))
-done' > timer.sh
 #vsechny banka funkce
 #diky tomuhle se pri vypnuti procesu udelaji jeste nejaky veci
 function cleanup() {
 save
-pkill -f "bash ./timer.sh"
 exit
 }
-
-
+function timer_port() {
+  echo "debug timer_port"
+time_seconds=600
+while [ $time_seconds -gt 0 ]; do
+  echo "debug"
+  sleep 1
+  echo $time_seconds
+  time_seconds=$((time_seconds - 1))
+done
+}
 function save() {
   echo "Chcete hru uložit? (ano/ne)"
   read save_1
@@ -238,13 +233,11 @@ echo "nemate pujcku na zaplaceni"
 banka
 fi
 echo "výteje chcete zaplatit urok "$name"?"
-time_left=$(cat timer.txt)
-if [ $time_left -le 0 ]; then
-echo "uz to melo byt davno zaplacene ale tak kdyz uz jste tady"
-else
-time_left=$(cat timer.txt)
-echo "do zaplaceni vam zbyva jeste $time_left sekund"
-fi
+#if [[ $time_seconds -le 0 ]]; then
+#echo "uz to melo byt davno zaplacene ale tak kdyz uz jste tady"
+#else
+echo "do zaplaceni vam zbyva jeste $time_seconds sekund"
+#fi
 echo "zbyva vam jeste $pocet_obdobi_pujcka splátek"
 read -p "chcete zaplatit urok $name? bude vas stat $urok_jedno_obdobi: " p_uroky_volba
 case $p_uroky_volba in
@@ -255,8 +248,8 @@ banka
 fi
 money=$((money-urok_jedno_obdobi))
 pocet_obdobi_pujcka=$((pocet_obdobi_pujcka-1))
-pkill -f "bash ./timer.sh"
-bash ./timer.sh &
+#pkill -f "bash ./timer.sh"
+#bash ./timer.sh &
 banka
 ;;
 ne)
@@ -267,20 +260,7 @@ echo "neplatna volba"
 p_uroky
 esac
 }
-#funkce uroky kalkulace
-function uroky_kalkulace() {
-bash ./timer.sh &
-sleep 5
-time_left=$(cat timer.txt)
-#if [[ $time_left -le 0 ]]; then
-#vymahac=1
-#else
-#echo ""
-#fi
-time_left=$(cat timer.txt)
-echo "do zaplacení další splátky vám zbvývá $time_left sekund"
-banka
-}
+
 #function pujcka
 
 function pujcka() {
@@ -331,7 +311,10 @@ function pujcka() {
       echo "Váš úrok na jednmo období je $urok_jedno_obdobi Kč"
       echo "platíte $pocet_obdobi_pujcka období"
       echo "Celkem zaplatíte $celkem Kč"
-      uroky_kalkulace
+      timer_port &
+      sleep 5
+      echo "do zaplacení další splátky vám zbvývá $time_seconds sekund"
+      banka
     fi
   ;;
   ne)
@@ -924,8 +907,8 @@ penize | peníze)
 echo "tak to bude $pocet_obdobi_pujcka"
 money=$((money - pocet_obdobi_pujcka))
 pocet_obdobi_pujcka=$((pocet_obdobi_pujcka-1))
-pkill -f "bash ./timer.sh"
-bash ./timer.sh &
+time_seconds=600
+timer_port &
 echo "Tak at uz se to neopakuje pokud toto byla posledni splatka musis jit do banky aby se pujcka ukoncila"
 $current_location
 ;;
