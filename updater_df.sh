@@ -42,6 +42,8 @@ case $updater_v1 in
  if [ uninstall_v1 == ano ]; then
     sudo rm -rf /bin/dfinances
     sudo rm -rf /bin/dfinances-updater
+    sudo rm -rf /usr/bin/dfinances
+    sudo rm -rf /usr/bin/dfinances-updater
     rm -rf $HOME/.ds_data/
     echo "software byl úspěšně odstraněn z vašeho zařízení, litujeme že jsem se takto rozhodli."
  fi

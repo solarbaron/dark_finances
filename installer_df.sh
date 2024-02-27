@@ -17,7 +17,7 @@ function installer() {
         sudo pacman -S wget
         ;;
         2 | apt | APT)
-        apt update
+        sudo apt update
         sudo apt install wget
         ;;
         3 | dnf | DNF)
@@ -37,8 +37,10 @@ function installer() {
     touch $HOME/.ds_data/timer
     wget -O $HOME/.ds_data/main_df.sh https://raw.githubusercontent.com/solarbaron/dark_finances/main/main_df.sh
     wget -O $HOME/.ds_data/updater_df.sh https://raw.githubusercontent.com/solarbaron/dark_finances/main/updater_df.sh
-    sudo ln -s $HOME/.ds_data/main_df.sh /bin/dfinances
-    sudo ln -s $HOME/.ds_data/updater_df.sh /bin/dfinances-updater
+    sudo ln -s $HOME/.ds_data/main_df.sh /usr/bin/dfinances
+    sudo ln -s $HOME/.ds_data/updater_df.sh /usr/bin/dfinances-updater
+    sudo chmod 755 /usr/bin/dfinances
+    sudo chmod 755 /usr/bin/dfinances-updater
     echo "Pro spuštní napište příkaz dfinances nebo pro autualizaci dfinances-updater"
 
 }
