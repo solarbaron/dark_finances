@@ -33,6 +33,7 @@ function installer() {
     esac
     mkdir -p $HOME/.ds_data/
     mkdir -p $HOME/.ds_data/save
+    touch $HOME/.ds_data/timer
     wget -O $HOME/.ds_data/main_df.sh https://raw.githubusercontent.com/solarbaron/dark_finances/main/main_df.sh
     wget -O $HOME/.ds_data/updater_df.sh https://raw.githubusercontent.com/solarbaron/dark_finances/main/updater_df.sh
     sudo ln -s $HOME/.ds_data/main_df.sh /bin/dfinances

@@ -2,7 +2,7 @@
 #darksouls 4
 
 #vsechny funkce
-#function game() {
+function game() {
 trap 'cleanup' SIGTERM SIGINT #EXIT 
 pocet_pujcek=0
 trezor_bal=0
@@ -27,13 +27,17 @@ save
 exit
 }
 function timer_port() {
-  echo "debug timer_port"
-time_seconds=600
+  
+time_seconds=20
 while [ $time_seconds -gt 0 ]; do
-  echo "debug"
   sleep 1
-  echo $time_seconds
   time_seconds=$((time_seconds - 1))
+  echo $time_seconds > $HOME/.ds_data/timer
+done
+#nekonecnej loop
+while :
+do
+    sleep 60 #delay
 done
 }
 function save() {
@@ -233,11 +237,13 @@ echo "nemate pujcku na zaplaceni"
 banka
 fi
 echo "výteje chcete zaplatit urok "$name"?"
-#if [[ $time_seconds -le 0 ]]; then
-#echo "uz to melo byt davno zaplacene ale tak kdyz uz jste tady"
-#else
-echo "do zaplaceni vam zbyva jeste $time_seconds sekund"
-#fi
+time_left=$(cat $HOME/.ds_data/timer)
+if [[ $time_left -le 0 ]]; then
+echo "uz to melo byt davno zaplacene ale tak kdyz uz jste tady"
+else
+time_left=$(cat $HOME/.ds_data/timer)
+echo "do zaplaceni vam zbyva jeste $time_left sekund"
+fi
 echo "zbyva vam jeste $pocet_obdobi_pujcka splátek"
 read -p "chcete zaplatit urok $name? bude vas stat $urok_jedno_obdobi: " p_uroky_volba
 case $p_uroky_volba in
@@ -248,8 +254,8 @@ banka
 fi
 money=$((money-urok_jedno_obdobi))
 pocet_obdobi_pujcka=$((pocet_obdobi_pujcka-1))
-#pkill -f "bash ./timer.sh"
-#bash ./timer.sh &
+kill $timer_pid
+timer_port &
 banka
 ;;
 ne)
@@ -312,8 +318,10 @@ function pujcka() {
       echo "platíte $pocet_obdobi_pujcka období"
       echo "Celkem zaplatíte $celkem Kč"
       timer_port &
+      timer_pid=$!
       sleep 5
-      echo "do zaplacení další splátky vám zbvývá $time_seconds sekund"
+      time_left=$(cat $HOME/.ds_data/timer)
+      echo "do zaplacení další splátky vám zbvývá $time_left sekund"
       banka
     fi
   ;;
@@ -904,11 +912,12 @@ echo "vyber bud zaplatis nebo ne"
 read vymahac_v
 case $vymahac_v in
 penize | peníze)
-echo "tak to bude $pocet_obdobi_pujcka"
-money=$((money - pocet_obdobi_pujcka))
+echo "tak to bude $urok_jedno_obdobi"
+money=$((money - urok_jedno_obdobi))
 pocet_obdobi_pujcka=$((pocet_obdobi_pujcka-1))
-time_seconds=600
+kill $timer_pid
 timer_port &
+timer_pid=$!
 echo "Tak at uz se to neopakuje pokud toto byla posledni splatka musis jit do banky aby se pujcka ukoncila"
 $current_location
 ;;
@@ -1049,11 +1058,22 @@ function Prague_predmesti() {
     mesto | město)
     Prague
     ;;
+    *)
+    $current_location
     esac
     }
     function Prague() {
     current_location=Prague
     echo "Vitej v praze"
+    time_left=$(cat $HOME/.ds_data/timer)
+    if [[ $time_left -le 0 ]]; then
+    random_vymahac=$((RANDOM % 5))
+    echo $random_vymahac
+    if [[ $random_vymahac == 3 ]]; then
+      vymahac
+      #else $current_location
+    fi
+    fi
     echo "kam chces jit?"
     if (( infocentrum_view == 0 )); then
     echo "pokud nevite bezte se podivat do infocentra"
@@ -1093,6 +1113,9 @@ function Prague_predmesti() {
     arena
     $current_location
     ;;
+    *)
+    echo "neplatna volba"
+    $current_location
     esac
     }
     
