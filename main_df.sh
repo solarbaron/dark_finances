@@ -48,17 +48,17 @@ function save() {
     read save_name
     touch "$HOME/.ds_data/save/$save_name"
     {
-      echo "export pocet_pujcek=$pocet_pujcek"
-      echo "export trezor_bal=$trezor_bal"
-      echo "export xp=$xp"
-      echo "export health=$health"
-      echo "export attack=$attack"
-      echo "export luck=$luck"
-      echo "export special_ability=$special_ability"
-      echo "export money=$money"
-      echo "export character=$character"
-      echo "export nickname=$nickname"
-      echo "export heslo=$heslo"
+      echo "pocet_pujcek=$pocet_pujcek"
+      echo "trezor_bal=$trezor_bal"
+      echo "xp=$xp"
+      echo "health=$health"
+      echo "attack=$attack"
+      echo "luck=$luck"
+      echo "special_ability=$special_ability"
+      echo "money=$money"
+      echo "character=$character"
+      echo "nickname=$nickname"
+      echo "heslo=$heslo"
     } > "$HOME/.ds_data/save/$save_name"
  else
     echo "konec"
@@ -69,12 +69,10 @@ function registrace() {
     clear
     echo "Pro používání této hry a save systému se zaregistruj"
     echo ""
-    sleep 1
     echo "-----------------------------------"
     echo "Váš nový nickname:"
     echo "-----------------------------------"
-    sleep 1
-
+    sleep 0.2
     read -r nickname
     clear
     echo "Pro používání této hry a save systému se zaregistruj"
@@ -82,7 +80,7 @@ function registrace() {
     echo "-----------------------------------"
     echo "Váš nový nickname: $nickname"
     echo "-----------------------------------"
-    sleep 1
+    sleep 0.2
     echo "Zadejte své heslo:"
     echo "-----------------------------------"
     heslo=""
@@ -100,18 +98,19 @@ function registrace() {
 function login() {
     clear
     echo "Přihlášení:"
-    sleep 2
     echo ""
     echo ""
     echo "-----------------------------------"
     echo "  Zadejte svůj nickname"
     echo "-----------------------------------"
+    sleep 0.2
     read -r nickname1
 
     if [[ "$nickname1" == "$nickname" ]]; then
         echo "-----------------------------------"
         echo "  Zadejte své heslo"
         echo "-----------------------------------"
+        sleep 0.2
         heslo1=""
         while IFS= read -s -n 1 char; do
             # Pokud je stisknut Enter, ukončíme smyčku
@@ -126,7 +125,7 @@ function login() {
         if [[ "$heslo" == "$heslo1" ]]; then
             clear
             echo "Úspěšně jste se přihlásil"
-            sleep 3
+            sleep 0.2
             clear
         else 
             echo "Zadali jste nesprávné heslo. Zkuste to znovu :("

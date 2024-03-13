@@ -15,13 +15,16 @@ function installer() {
         case $pkginstall_v2 in
         1 | pacman | Pacman)
         sudo pacman -S wget
+        sudo pacman -S cmus
         ;;
         2 | apt | APT)
         sudo apt update
         sudo apt install wget
+        sudo apt install cmus
         ;;
         3 | dnf | DNF)
         sudo dnf install wget
+        sudo dnf install cmus
         ;;
         *)
         echo "neplatná odpověď"
@@ -41,7 +44,8 @@ function installer() {
     sudo ln -s $HOME/.ds_data/updater_df.sh /usr/bin/dfinances-updater
     sudo chmod 755 /usr/bin/dfinances
     sudo chmod 755 /usr/bin/dfinances-updater
-    echo "Pro spuštní napište příkaz dfinances nebo pro autualizaci dfinances-updater"
+    echo "Pro spuštní napište příkaz dfinances"
+    echo "Aktualizační program spustíte dfinances-updater"
 
 }
 installer
